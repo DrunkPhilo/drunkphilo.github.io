@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026级博士班新生画像 · 省籍 / 性别 / 年龄 / 升学形式</title>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:36px 20px 60px;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1200px 600px at 8% -12%, #dbeafe 0%, transparent 62%),
+      radial-gradient(1000px 520px at 100% 0%, #fae8ff 0%, transparent 58%),
+      #f1f5f9;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  /* ---------- 页头 ---------- */
+  header{text-align:center;margin-bottom:26px;}
+  header h1{
+    margin:0 0 10px;
+    font-size:clamp(22px,3.2vw,32px);
+    letter-spacing:.5px;
+    font-weight:800;
+  }
+  header h1 span{
+    background:linear-gradient(92deg,#2563eb,#8b5cf6 55%,#ec4899);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  header p{margin:0;color:var(--muted);font-size:14px;letter-spacing:.3px;}
+
+  /* ---------- 概览 ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin:26px 0 24px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid rgba(226,232,240,.9);
+    border-radius:16px;
+    padding:16px 12px;
+    text-align:center;
+    box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -16px rgba(15,23,42,.28);
+  }
+  .stat .num{
+    display:block;
+    font-size:clamp(20px,2.6vw,27px);
+    font-weight:800;
+    letter-spacing:.5px;
+    font-variant-numeric:tabular-nums;
+    background:linear-gradient(92deg,#1d4ed8,#7c3aed);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat .lbl{display:block;margin-top:5px;font-size:12.5px;color:var(--muted);}
+
+  /* ---------- 卡片网格 ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .card{
+    background:var(--card);
+    border:1px solid rgba(226,232,240,.9);
+    border-radius:18px;
+    padding:22px 24px 24px;
+    box-shadow:0 1px 2px rgba(15,23,42,.04),0 16px 34px -18px rgba(15,23,42,.30);
+  }
+  .card.wide{grid-column:1 / -1;}
+  .card h2{
+    margin:0 0 4px;
+    font-size:16.5px;
+    font-weight:700;
+    display:flex;align-items:center;gap:9px;
+  }
+  .card h2::before{
+    content:"";
+    width:5px;height:17px;border-radius:3px;
+    background:linear-gradient(180deg,#3b82f6,#8b5cf6);
+    flex:none;
+  }
+  .card h2 small{
+    font-weight:400;
+    font-size:12px;
+    color:#94a3b8;
+    margin-left:auto;
+    letter-spacing:.2px;
+  }
+  .chart-body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:26px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+
+  /* ---------- 饼图 ---------- */
+  .pie-wrap{
+    position:relative;
+    width:250px;
+    max-width:100%;
+    aspect-ratio:1/1;
+    flex:none;
+  }
+  .pie-wrap svg{width:100%;height:100%;display:block;overflow:visible;}
+  .slice{transition:opacity .18s ease;cursor:pointer;}
+  .slice:hover{opacity:.78;}
+  .pie-center{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    pointer-events:none;
+    text-align:center;
+  }
+  .pie-center .big{
+    font-size:27px;font-weight:800;line-height:1.05;
+    font-variant-numeric:tabular-nums;
+    color:#1e293b;
+  }
+  .pie-center .small{
+    margin-top:4px;font-size:11.5px;color:#94a3b8;letter-spacing:.4px;
+  }
+
+  /* ---------- 图例 ---------- */
+  .legend{
+    list-style:none;margin:0;padding:0;
+    display:grid;gap:9px 20px;
+    font-size:13.5px;
+    flex:1 1 280px;
+    min-width:240px;
+  }
+  .legend.two-col{grid-template-columns:1fr 1fr;}
+  .legend li{display:flex;align-items:center;gap:9px;line-height:1.2;}
+  .legend i{
+    width:11px;height:11px;border-radius:3.5px;flex:none;
+    box-shadow:0 0 0 2px rgba(255,255,255,.9);
+  }
+  .legend .name{
+    flex:1;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .legend .val{
+    font-weight:700;font-variant-numeric:tabular-nums;color:#0f172a;
+  }
+  .legend .pct{
+    width:50px;text-align:right;color:#94a3b8;
+    font-size:12.5px;font-variant-numeric:tabular-nums;
+  }
+
+  footer{
+    margin-top:26px;text-align:center;
+    font-size:12px;color:#94a3b8;line-height:1.8;
+  }
+
+  @media (max-width:900px){
+    .grid{grid-template-columns:1fr;}
+    .card.wide{grid-column:auto;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .legend.two-col{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    body{padding:24px 12px 44px;}
+    .card{padding:18px 16px 20px;}
+    .pie-wrap{width:210px;}
+    .legend.two-col{grid-template-columns:1fr;}
+    .legend .pct{width:46px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>2026级<span>博士班</span>新生画像</h1>
+    <p>临床医学院（东方医院） · 共 68 名新生 · 省籍 / 性别 / 年龄 / 升学形式</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><span class="num">68</span><span class="lbl">新生总数（人）</span></div>
+    <div class="stat"><span class="num">22</span><span class="lbl">覆盖省份（个）</span></div>
+    <div class="stat"><span class="num">30 / 38</span><span class="lbl">男生 / 女生</span></div>
+    <div class="stat"><span class="num">26.3</span><span class="lbl">平均年龄（岁）</span></div>
+  </div>
+
+  <div class="grid">
+
+    <section class="card wide">
+      <h2>省籍分布 <small>按身份证号归属地统计</small></h2>
+      <div class="chart-body">
+        <div class="pie-wrap" id="pie-province"></div>
+        <ul class="legend two-col" id="legend-province"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>性别构成 <small>男 30 · 女 38</small></h2>
+      <div class="chart-body">
+        <div class="pie-wrap" id="pie-gender"></div>
+        <ul class="legend" id="legend-gender"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>年龄结构 <small>按出生年份折算</small></h2>
+      <div class="chart-body">
+        <div class="pie-wrap" id="pie-age"></div>
+        <ul class="legend" id="legend-age"></ul>
+      </div>
+    </section>
+
+    <section class="card wide">
+      <h2>升学形式 <small>依据“备注”字段</small></h2>
+      <div class="chart-body">
+        <div class="pie-wrap" id="pie-form"></div>
+        <ul class="legend two-col" id="legend-form"></ul>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    统计口径：省籍依据身份证号前两位；年龄按出生年份折算至 2026 年 9 月入学时；升学形式依据“备注”字段。<br>
+    数据来源：2026博士班.xlsx · 源数据表（68 条记录）
+  </footer>
+
+</div>
+
+<script>
+/* =======================================================
+   数据
+   ======================================================= */
+const PROVINCE = [
+  { name:'山东',            value:12, color:'#2563EB' },
+  { name:'河南',            value:10, color:'#EF4444' },
+  { name:'山西',            value: 6, color:'#F59E0B' },
+  { name:'河北',            value: 5, color:'#10B981' },
+  { name:'四川',            value: 4, color:'#8B5CF6' },
+  { name:'黑龙江',          value: 4, color:'#EC4899' },
+  { name:'福建',            value: 3, color:'#14B8A6' },
+  { name:'北京',            value: 3, color:'#F97316' },
+  { name:'江苏',            value: 2, color:'#6366F1' },
+  { name:'江西',            value: 2, color:'#84CC16' },
+  { name:'辽宁',            value: 2, color:'#06B6D4' },
+  { name:'浙江',            value: 2, color:'#D946EF' },
+  { name:'湖北',            value: 2, color:'#EAB308' },
+  { name:'贵州',            value: 2, color:'#22C55E' },
+  { name:'湖南',            value: 2, color:'#0EA5E9' },
+  { name:'其他7省',         value: 7, color:'#94A3B8' }
+];
+
+const GENDER = [
+  { name:'男生', value:30, color:'#3B82F6' },
+  { name:'女生', value:38, color:'#F472B6' }
+];
+
+const AGE = [
+  { name:'2000年出生（约26岁）',        value:27, color:'#2563EB' },
+  { name:'1997–1999年出生（27–29岁）',  value:23, color:'#F59E0B' },
+  { name:'2001–2003年出生（22–25岁）',  value:16, color:'#10B981' },
+  { name:'1987 / 1989年出生（37–39岁）', value: 2, color:'#8B5CF6' }
+];
+
+const FORM = [
+  { name:'统考',     value:35, color:'#2563EB' },
+  { name:'申请考核', value:14, color:'#F59E0B' },
+  { name:'九年制',   value:13, color:'#10B981' },
+  { name:'丹心计划', value: 6, color:'#8B5CF6' }
+];
+
+/* =======================================================
+   饼图绘制（原生 SVG，无外部依赖）
+   ======================================================= */
+const SIZE = 250, CX = 125, CY = 125, R_OUT = 104, R_IN = 64;
+
+function polar(cx, cy, r, deg){
+  const rad = (deg - 90) * Math.PI / 180;
+  return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+}
+
+function donutPath(cx, cy, rO, rI, a0, a1){
+  const large = (a1 - a0) > 180 ? 1 : 0;
+  const [x0, y0] = polar(cx, cy, rO, a0);
+  const [x1, y1] = polar(cx, cy, rO, a1);
+  const [x2, y2] = polar(cx, cy, rI, a1);
+  const [x3, y3] = polar(cx, cy, rI, a0);
+  return `M ${x0} ${y0} A ${rO} ${rO} 0 ${large} 1 ${x1} ${y1} `
+       + `L ${x2} ${y2} A ${rI} ${rI} 0 ${large} 0 ${x3} ${y3} Z`;
+}
+
+function renderPie(key, items, centerBig, centerSmall){
+  const total = items.reduce((s, d) => s + d.value, 0);
+  const pieEl = document.getElementById('pie-' + key);
+  const legendEl = document.getElementById('legend-' + key);
+
+  /* ---- 生成扇区 ---- */
+  let angle = 0;
+  let paths = '';
+
+  items.forEach(d => {
+    const sweep = d.value / total * 360;
+    const a0 = angle;
+    const a1 = angle + sweep;
+    const pct = (d.value / total * 100).toFixed(1);
+
+    if (items.length === 1){
+      paths += `<circle cx="${CX}" cy="${CY}" r="${(R_OUT + R_IN) / 2}"
+                 fill="none" stroke="${d.color}" stroke-width="${R_OUT - R_IN}"/>`;
+    } else {
+      paths += `<path class="slice"
+                 d="${donutPath(CX, CY, R_OUT, R_IN, a0, a1)}"
+                 fill="${d.color}" stroke="#ffffff" stroke-width="1.5"
+                 stroke-linejoin="round">
+                 <title>${d.name}：${d.value} 人（${pct}%）</title>
+               </path>`;
+    }
+    angle = a1;
+  });
+
+  pieEl.innerHTML = `
+    <svg viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="${key}饼图">
+      ${paths}
+    </svg>
+    <div class="pie-center">
+      <div class="big">${centerBig}</div>
+      <div class="small">${centerSmall}</div>
+    </div>`;
+
+  /* ---- 生成图例 ---- */
+  legendEl.innerHTML = items.map(d => {
+    const pct = (d.value / total * 100).toFixed(1);
+    return `<li>
+      <i style="background:${d.color}"></i>
+      <span class="name">${d.name}</span>
+      <span class="val">${d.value}</span>
+      <span class="pct">${pct}%</span>
+    </li>`;
+  }).join('');
+}
+
+/* =======================================================
+   渲染
+   ======================================================= */
+renderPie('province', PROVINCE, '68', '人 · 22 省');
+renderPie('gender',   GENDER,   '68', '人 · 男女比 1 : 1.27');
+renderPie('age',      AGE,      '26.3', '平均年龄（岁）');
+renderPie('form',     FORM,     '68', '人 · 4 种途径');
+</script>
+</body>
+</html>
